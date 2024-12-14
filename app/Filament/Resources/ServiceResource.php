@@ -4,18 +4,23 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Booking;
+use App\Models\Service;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\BookingResource\Pages;
+use App\Filament\Resources\ServiceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\BookingResource\RelationManagers;
+use App\Filament\Resources\ServiceResource\RelationManagers;
 
-class BookingResource extends Resource
+class ServiceResource extends Resource
 {
-    protected static ?string $model = Booking::class;
+    protected static ?string $model = Service::class;
+
+    public static function getModelLabel(): string
+{
+    return __('Service');
+}
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,16 +28,12 @@ class BookingResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('client_name')
+                Forms\Components\TextInput::make('name')
+                    ->label('Nome do Serviço')
                     ->required(),
-                Forms\Components\Select::make('service_id')
-                    ->relationship('service', 'name')
-                    ->required(),
-                // Forms\Components\TextInput::make('service')
-                //     ->required(),
-                Forms\Components\DateTimePicker::make('start_time')
-                    ->required(),
-                Forms\Components\DateTimePicker::make('end_time')
+                Forms\Components\TextInput::make('price')
+                    ->label('Preço')
+                    ->numeric()
                     ->required(),
             ]);
     }
@@ -41,10 +42,8 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client_name'),
-                Tables\Columns\TextColumn::make('service.name'),
-                Tables\Columns\TextColumn::make('start_time'),
-                Tables\Columns\TextColumn::make('end_time')
+                Tables\Columns\TextColumn::make('name')->label('Serviço'),
+                Tables\Columns\TextColumn::make('price')->label('Preço')->formatStateUsing(fn ($state) => 'R$ ' . number_format($state, 2, ',', '.')),
             ])
             ->filters([
                 //
@@ -66,12 +65,14 @@ class BookingResource extends Resource
         ];
     }
 
+    
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBookings::route('/'),
-            'create' => Pages\CreateBooking::route('/create'),
-            'edit' => Pages\EditBooking::route('/{record}/edit'),
+            'index' => Pages\ListServices::route('/'),
+            'create' => Pages\CreateService::route('/create'),
+            'edit' => Pages\EditService::route('/{record}/edit'),
         ];
     }
+
 }

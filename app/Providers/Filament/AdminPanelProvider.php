@@ -25,20 +25,21 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-        ->bootUsing(function (){
-            Field::configureUsing(function(Field $field) {
-                $field->translateLabel();
-            });
+            ->bootUsing(function (){
+                Field::configureUsing(function(Field $field) {
+                    $field->translateLabel();
+                });
 
-            Column::configureUsing(function(Column $column) { 
-                $column->translateLabel();
-            });
-        })
+                Column::configureUsing(function(Column $column) { 
+                    $column->translateLabel();
+                });
+            })
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
             ->registration()
+            ->brandLogo(asset('images/logo.png'))
             ->colors([
                 'primary' => Color::Amber,
             ])
