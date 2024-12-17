@@ -18,9 +18,9 @@ class ServiceResource extends Resource
     protected static ?string $model = Service::class;
 
     public static function getModelLabel(): string
-{
-    return __('Service');
-}
+    {
+        return __('Service');
+    }
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

@@ -3,5 +3,9 @@
   "Client name": "Nome do Cliente",
   "Service": "Serviço",
   "Start time": "Início",
-  "End time": "Término"
+  "End time": "Término",
+  "Bookings": "Reservas",
+  "Booking": "Reservas",
+  "booking": "Reservas"
+
 }

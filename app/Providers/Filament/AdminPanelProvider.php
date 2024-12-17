@@ -17,6 +17,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
@@ -25,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+
             ->bootUsing(function (){
                 Field::configureUsing(function(Field $field) {
                     $field->translateLabel();
@@ -39,10 +43,17 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->registration()
-            ->brandLogo(asset('images/logo.png'))
+            ->renderHook(
+                PanelsRenderHook::SIDEBAR_FOOTER,
+                fn (): View => view('filament.footer'),
+            )
+            ->brandLogo(asset('images/logo3.png'))
+            ->brandLogoHeight('3rem')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#1d4ed8'),
             ])
+            ->font('Nunito')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
