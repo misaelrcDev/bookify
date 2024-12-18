@@ -12,10 +12,18 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ServiceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ServiceResource\RelationManagers;
+use Filament\Actions\CreateAction;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', Auth::id());
+    }
+
 
     public static function getModelLabel(): string
     {
@@ -35,6 +43,9 @@ class ServiceResource extends Resource
                     ->label('Preço')
                     ->numeric()
                     ->required(),
+                Forms\Components\Hidden::make('user_id')
+                    ->default(Auth::id())
+                    ->required(),
             ]);
     }
 
@@ -50,6 +61,11 @@ class ServiceResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data): array { 
+                    $data['user_id'] = Auth::user()->id;
+                    return $data; 
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

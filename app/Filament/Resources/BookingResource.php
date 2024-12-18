@@ -12,10 +12,17 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BookingResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\BookingResource\RelationManagers;
+use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 
 class BookingResource extends Resource
 {
     protected static ?string $model = Booking::class;
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', Auth::id());
+    }
 
     public static function getModelLabel(): string
     {
@@ -32,12 +39,14 @@ class BookingResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('service_id')
                     ->relationship('service', 'name')
+                    ->options(Service::where('user_id', Auth::id())->pluck('name', 'id'))
                     ->required(),
-                // Forms\Components\TextInput::make('service')
-                //     ->required(),
                 Forms\Components\DateTimePicker::make('start_time')
                     ->required(),
                 Forms\Components\DateTimePicker::make('end_time')
+                    ->required(),
+                Forms\Components\Hidden::make('user_id')
+                    ->default(Auth::id())
                     ->required(),
             ]);
     }
@@ -56,6 +65,11 @@ class BookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data): array {
+                    $data['user_id'] = Auth::user()->id;
+                    return $data;
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
