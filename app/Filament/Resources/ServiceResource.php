@@ -8,12 +8,12 @@ use App\Models\Service;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Actions\CreateAction;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ServiceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ServiceResource\RelationManagers;
-use Filament\Actions\CreateAction;
-use Illuminate\Support\Facades\Auth;
 
 class ServiceResource extends Resource
 {
@@ -64,7 +64,7 @@ class ServiceResource extends Resource
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array { 
                     $data['user_id'] = Auth::user()->id;
-                    return $data; 
+                    return $data;
                 }),
             ])
             ->bulkActions([
