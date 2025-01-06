@@ -9,6 +9,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
 class ReservationsCount extends BaseWidget
 {
+    protected static ?int $sort = 2;
     protected function getStats(): array
     {
         return [

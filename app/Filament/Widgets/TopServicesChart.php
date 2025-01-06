@@ -3,40 +3,36 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Booking;
-use Flowframe\Trend\Trend;
-use Flowframe\Trend\TrendValue;
+use App\Models\Service; // Supondo que você tenha um modelo de Service
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Filament\Support\RawJs;
 
-class ReservationsChart extends ChartWidget
+class TopServicesChart extends ChartWidget
 {
-    protected static ?string $heading = 'Reservas por Mês';
+    protected static ?string $heading = 'Serviços Mais Reservados';
 
     protected function getData(): array
     {
         $userId = Auth::id();
 
-        $query = Booking::where('user_id', $userId);
+        $services = Service::all(); // Supondo que você tenha um modelo de Service
+        $serviceReservations = [];
+        foreach ($services as $service) {
+            $serviceReservations[$service->name] = Booking::where('user_id', $userId)
+                ->where('service_id', $service->id)
+                ->count();
+        }
 
-        $data = Trend::query($query)
-        ->between(
-            start: now()->startOfYear(),
-            end: now()->endOfYear(),
-        )
-        ->perMonth()
-        ->count();
-        
         return [
             'datasets' => [
-                    [
-                        'label' => 'Reservas por mês',
-                        'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
-                    ],
+                [
+                    'label' => 'Serviços mais reservados',
+                    'data' => array_values($serviceReservations),
                 ],
-                'labels' => $data->map(fn (TrendValue $value) => $value->date),
-            ];
+            ],
+            'labels' => array_keys($serviceReservations),
+        ];
     }
 
     protected function getOptions(): RawJs
