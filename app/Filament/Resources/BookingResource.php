@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Actions\Action;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BookingsExport;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Booking;
@@ -14,6 +17,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BookingResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\BookingResource\RelationManagers;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Database\Eloquent\Collection;
 
 class BookingResource extends Resource
 {
@@ -65,16 +70,40 @@ class BookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data): array {
-                    $data['user_id'] = Auth::user()->id;
-                    return $data;
-                }),
+                // Tables\Actions\CreateAction::make()
+                //     ->mutateFormDataUsing(function (array $data): array {
+                //     $data['user_id'] = Auth::user()->id;
+                //     return $data;
+                // }),
+
+                // Action::make('exportExcel')
+                // ->label('Exportar para Excel')
+                // ->action(function () {
+                //     return Excel::download(new BookingsExport, 'reservas.xlsx');
+                // })
+                // ->icon('heroicon-o-folder-arrow-down')
+                // ->color('success'),
             ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+
+                BulkAction::make('export')
+                    ->label('Exportar Selecionados')
+                    ->action(function (Collection $records) {
+                        $bookingsExport = $records->map(function ($booking) {
+                            return [
+                                'client_name' => $booking->client_name,
+                                'service' => $booking->service->name,
+                                'start_time' => $booking->start_time,
+                                'end_time' => $booking->end_time,
+                            ];
+                        });
+
+                        return Excel::download(new BookingsExport($bookingsExport), 'reservas.xlsx');
+                    }),
             ]);
     }
 
