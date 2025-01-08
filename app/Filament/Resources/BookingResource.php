@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Tables\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BookingsExport;
 use Filament\Forms;
@@ -15,8 +14,6 @@ use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BookingResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\BookingResource\RelationManagers;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -70,19 +67,6 @@ class BookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                // Tables\Actions\CreateAction::make()
-                //     ->mutateFormDataUsing(function (array $data): array {
-                //     $data['user_id'] = Auth::user()->id;
-                //     return $data;
-                // }),
-
-                // Action::make('exportExcel')
-                // ->label('Exportar para Excel')
-                // ->action(function () {
-                //     return Excel::download(new BookingsExport, 'reservas.xlsx');
-                // })
-                // ->icon('heroicon-o-folder-arrow-down')
-                // ->color('success'),
             ])
 
             ->bulkActions([
@@ -104,6 +88,17 @@ class BookingResource extends Resource
 
                         return Excel::download(new BookingsExport($bookingsExport), 'reservas.xlsx');
                     }),
+
+                BulkAction::make('exportPdf')
+                    ->label('Exportar para PDF')
+                    ->action(function (Collection $records) {
+                        $selectedIds = $records->pluck('id')->toArray();
+
+                        return response()->redirectToRoute('report.pdf', ['selected' => $selectedIds]);
+                    })
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('danger')
+                    ->openUrlInNewTab(),
             ]);
     }
 
