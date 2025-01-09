@@ -31,7 +31,7 @@ class ReportController extends Controller
         // Gera o PDF
         $pdf = Pdf::loadView('reports.bookings', compact('bookings'));
 
-        return $pdf->download('bookings.pdf');
+        return $pdf->download('reservas.pdf');
     }
 }
 
