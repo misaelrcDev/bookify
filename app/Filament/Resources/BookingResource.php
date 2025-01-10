@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BookingResource\Pages;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
+use Filament\Tables\Actions\Action;
+use App\Jobs\SendReportEmailJob;
 
 class BookingResource extends Resource
 {
@@ -99,6 +101,21 @@ class BookingResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('danger')
                     ->openUrlInNewTab(),
+
+                BulkAction::make('sendEmailReport')
+                    ->label('Enviar Relatório por E-mail')
+                    ->action(function (Collection $records, array $data) {
+                        $selectedIds = $records->pluck('id')->toArray();
+                        SendReportEmailJob::dispatch($data['email'], $selectedIds);
+                    })
+                    ->form([
+                        Forms\Components\TextInput::make('email')
+                            ->label('E-mail do Destinatário')
+                            ->email()
+                            ->required(),
+                    ])
+                    ->icon('heroicon-o-envelope')
+                    ->color('primary'),
             ]);
     }
 
