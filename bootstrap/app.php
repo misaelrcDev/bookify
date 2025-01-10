@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Console\Scheduling\Schedule;
+use App\Providers\EventServiceProvider;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,6 +15,17 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
+    
+    ->withProviders([
+        EventServiceProvider::class, // Adicione esta linha
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+
+    ->withSchedule(function (Schedule $schedule) {
+        // Agendar o envio diário do relatório às 8h para um e-mail específico
+        $schedule->command('report:send misael.cabral89@gmail.com')->dailyAt('16:13');
+    })
+    ->create();
+

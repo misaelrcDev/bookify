@@ -41,6 +41,9 @@ class BookingResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('client_name')
                     ->required(),
+                Forms\Components\TextInput::make('client_email')
+                    ->email()
+                    ->required(),
                 Forms\Components\Select::make('service_id')
                     ->relationship('service', 'name')
                     ->options(Service::where('user_id', Auth::id())->pluck('name', 'id'))
@@ -60,6 +63,7 @@ class BookingResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('client_name'),
+                Tables\Columns\TextColumn::make('client_email'),
                 Tables\Columns\TextColumn::make('service.name'),
                 Tables\Columns\TextColumn::make('start_time'),
                 Tables\Columns\TextColumn::make('end_time')
@@ -77,7 +81,7 @@ class BookingResource extends Resource
                 ]),
 
                 BulkAction::make('export')
-                    ->label('Exportar Selecionados')
+                    ->label('Exportar para Excel')
                     ->action(function (Collection $records) {
                         $bookingsExport = $records->map(function ($booking) {
                             return [
@@ -89,7 +93,8 @@ class BookingResource extends Resource
                         });
 
                         return Excel::download(new BookingsExport($bookingsExport), 'reservas.xlsx');
-                    }),
+                    })
+                    ->icon('heroicon-o-document-arrow-down'),
 
                 BulkAction::make('exportPdf')
                     ->label('Exportar para PDF')
@@ -115,7 +120,7 @@ class BookingResource extends Resource
                             ->required(),
                     ])
                     ->icon('heroicon-o-envelope')
-                    ->color('primary'),
+                    ->color('success'),
             ]);
     }
 
