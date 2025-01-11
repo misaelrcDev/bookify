@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     
     ->withProviders([
-        EventServiceProvider::class, // Adicione esta linha
+        // EventServiceProvider::class, // Adicione esta linha
     ])
     ->withExceptions(function (Exceptions $exceptions) {
         //

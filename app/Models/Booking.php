@@ -18,15 +18,9 @@ class Booking extends Model
         'user_id'
     ];
 
-    protected $dispatchesEvents = [ 
-        'created' => BookingCreated::class, 
+    protected $dispatchesEvents = [
+        'created' => BookingCreated::class,
     ];
-
-    protected static function booted() { 
-        static::created(function ($booking) { 
-            Log::info("Evento BookingCreated disparado para: {$booking->client_email}"); 
-        });
-    }
 
     public function service()
     {
