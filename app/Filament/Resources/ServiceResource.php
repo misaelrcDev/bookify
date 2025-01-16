@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ServiceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ServiceResource\RelationManagers;
+use Illuminate\Support\Collection;
+
 
 class ServiceResource extends Resource
 {
@@ -39,6 +41,8 @@ class ServiceResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->label('Nome do Serviço')
                     ->required(),
+                    // ->unique(Service::class, 'name', ignorable: fn ($record) => $record) // Verifica duplicação
+                    // ->rule('unique:services,name,NULL,id,user_id,' . Auth::id()), // Garantir unicidade por usuário
                 Forms\Components\TextInput::make('price')
                     ->label('Preço')
                     ->numeric()
@@ -66,10 +70,19 @@ class ServiceResource extends Resource
                     $data['user_id'] = Auth::user()->id;
                     return $data;
                 }),
+                Tables\Actions\DeleteAction::make()
+                    ->before(function ($record) {
+                    // Remove permanentemente o registro ao deletar
+                    $record->forceDelete();
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->action(function (Collection $records) {
+                        // Remove permanentemente os registros selecionados
+                        $records->each->forceDelete();
+                    }),
                 ]),
             ]);
     }
