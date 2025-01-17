@@ -65,11 +65,6 @@ class ServiceResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data): array { 
-                    $data['user_id'] = Auth::user()->id;
-                    return $data;
-                }),
                 Tables\Actions\DeleteAction::make()
                     ->before(function ($record) {
                     // Remove permanentemente o registro ao deletar

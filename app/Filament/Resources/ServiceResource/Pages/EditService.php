@@ -26,7 +26,7 @@ class EditService extends EditRecord
             ->where('user_id', Auth::id())
             ->where('id', '!=', $this->record->id)
             ->exists()) {
-            throw new \Exception('Já existe um serviço com esse nome.');
+            // throw new \Exception('Já existe um serviço com esse nome.');
         }
 
         return $data;

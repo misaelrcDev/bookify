@@ -73,12 +73,18 @@ class BookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->before(function ($record) {
+                    // Remove permanentemente o registro ao deletar
+                    $record->forceDelete();
+                }),
             ])
 
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ])
+                ->extraAttributes(['class' => 'overflow-x-auto flex space-x-2']),
 
                 BulkAction::make('export')
                     ->label('Exportar para Excel')
@@ -94,7 +100,8 @@ class BookingResource extends Resource
 
                         return Excel::download(new BookingsExport($bookingsExport), 'reservas.xlsx');
                     })
-                    ->icon('heroicon-o-document-arrow-down'),
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->extraAttributes(['class' => 'flex-shrink-0']),
 
                 BulkAction::make('exportPdf')
                     ->label('Exportar para PDF')
@@ -105,7 +112,8 @@ class BookingResource extends Resource
                     })
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('danger')
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab()
+                    ->extraAttributes(['class' => 'flex-shrink-0']),
 
                 BulkAction::make('sendEmailReport')
                     ->label('Enviar Relatório por E-mail')
@@ -120,7 +128,8 @@ class BookingResource extends Resource
                             ->required(),
                     ])
                     ->icon('heroicon-o-envelope')
-                    ->color('success'),
+                    ->color('success')
+                    ->extraAttributes(['class' => 'flex-shrink-0']),
             ]);
     }
 
