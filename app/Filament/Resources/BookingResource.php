@@ -59,33 +59,30 @@ class BookingResource extends Resource
     }
 
     public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('client_name'),
-                Tables\Columns\TextColumn::make('client_email'),
-                Tables\Columns\TextColumn::make('service.name'),
-                Tables\Columns\TextColumn::make('start_time'),
-                Tables\Columns\TextColumn::make('end_time')
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+{
+    return $table
+        ->columns([
+            Tables\Columns\TextColumn::make('client_name'),
+            Tables\Columns\TextColumn::make('client_email'),
+            Tables\Columns\TextColumn::make('service.name'),
+            Tables\Columns\TextColumn::make('start_time'),
+            Tables\Columns\TextColumn::make('end_time'),
+        ])
+        ->filters([
+            //
+        ])
+        ->actions([
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make()
                     ->before(function ($record) {
                     // Remove permanentemente o registro ao deletar
                     $record->forceDelete();
                 }),
-            ])
-
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ])
-                ->extraAttributes(['class' => 'overflow-x-auto flex space-x-2']),
-
+        ])
+        ->bulkActions([
+            // Menu dropdown para todas as telas
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
                 BulkAction::make('export')
                     ->label('Exportar para Excel')
                     ->action(function (Collection $records) {
@@ -100,9 +97,7 @@ class BookingResource extends Resource
 
                         return Excel::download(new BookingsExport($bookingsExport), 'reservas.xlsx');
                     })
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->extraAttributes(['class' => 'flex-shrink-0']),
-
+                    ->icon('heroicon-o-document-arrow-down'),
                 BulkAction::make('exportPdf')
                     ->label('Exportar para PDF')
                     ->action(function (Collection $records) {
@@ -112,9 +107,7 @@ class BookingResource extends Resource
                     })
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('danger')
-                    ->openUrlInNewTab()
-                    ->extraAttributes(['class' => 'flex-shrink-0']),
-
+                    ->openUrlInNewTab(),
                 BulkAction::make('sendEmailReport')
                     ->label('Enviar Relatório por E-mail')
                     ->action(function (Collection $records, array $data) {
@@ -128,10 +121,13 @@ class BookingResource extends Resource
                             ->required(),
                     ])
                     ->icon('heroicon-o-envelope')
-                    ->color('success')
-                    ->extraAttributes(['class' => 'flex-shrink-0']),
-            ]);
-    }
+                    ->color('success'),
+            ])
+            ->dropdown(), // Sempre exibido como dropdown
+        ]);
+}
+
+
 
     public static function getRelations(): array
     {

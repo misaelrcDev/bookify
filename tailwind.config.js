@@ -17,5 +17,11 @@ export default {
             
         },
     },
+    screens: {
+        sm: '640px',   // Small (Mobile)
+        md: '768px',   // Medium (Tablet)
+        lg: '1024px',  // Large (Desktop)
+        xl: '1280px',  // Extra Large
+    },
     plugins: [],
 };
