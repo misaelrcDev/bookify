@@ -1,10 +1,10 @@
 <?php
 
+use App\Providers\EventServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Console\Scheduling\Schedule;
-use App\Providers\EventServiceProvider;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
-    
+
     ->withProviders([
         // EventServiceProvider::class, // Adicione esta linha
     ])
@@ -28,4 +28,3 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('report:send misael.cabral89@gmail.com')->dailyAt('16:13');
     })
     ->create();
-

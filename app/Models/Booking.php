@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Events\BookingCreated;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
@@ -15,7 +14,7 @@ class Booking extends Model
         'start_time',
         'end_time',
         'service_id',
-        'user_id'
+        'user_id',
     ];
 
     protected $dispatchesEvents = [
@@ -26,5 +25,4 @@ class Booking extends Model
     {
         return $this->belongsTo(Service::class);
     }
-
 }

@@ -19,7 +19,7 @@ class ReportController extends Controller
             ->where('user_id', Auth::user()->id)
             ->whereIn('id', $selectedIds)
             ->get()
-            ->map(function($booking) {
+            ->map(function ($booking) {
                 return [
                     'client_name' => $booking->client_name,
                     'service' => $booking->service->name,
@@ -34,4 +34,3 @@ class ReportController extends Controller
         return $pdf->download('reservas.pdf');
     }
 }
-

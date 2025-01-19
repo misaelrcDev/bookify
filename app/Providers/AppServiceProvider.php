@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use Filament\Facades\Filament;
-use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentAsset;
-
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

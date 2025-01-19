@@ -3,13 +3,14 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Booking;
-use Illuminate\Support\Facades\Auth;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationsCount extends BaseWidget
 {
     protected static ?int $sort = 2;
+
     protected function getStats(): array
     {
         return [

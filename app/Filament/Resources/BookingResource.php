@@ -2,22 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BookingsExport;
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\BookingResource\Pages;
+use App\Jobs\SendReportEmailJob;
 use App\Models\Booking;
 use App\Models\Service;
+use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\BookingResource\Pages;
+use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Filament\Tables\Actions\Action;
-use App\Jobs\SendReportEmailJob;
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookingResource extends Resource
 {
@@ -59,75 +58,69 @@ class BookingResource extends Resource
     }
 
     public static function table(Table $table): Table
-{
-    return $table
-        ->columns([
-            Tables\Columns\TextColumn::make('client_name'),
-            Tables\Columns\TextColumn::make('client_email'),
-            Tables\Columns\TextColumn::make('service.name'),
-            Tables\Columns\TextColumn::make('start_time'),
-            Tables\Columns\TextColumn::make('end_time'),
-        ])
-        ->filters([
-            //
-        ])
-        ->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make()
-                    ->before(function ($record) {
-                    // Remove permanentemente o registro ao deletar
-                    $record->forceDelete();
-                }),
-        ])
-        ->bulkActions([
-            // Menu dropdown para todas as telas
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-                BulkAction::make('export')
-                    ->label('Exportar para Excel')
-                    ->action(function (Collection $records) {
-                        $bookingsExport = $records->map(function ($booking) {
-                            return [
-                                'client_name' => $booking->client_name,
-                                'service' => $booking->service->name,
-                                'start_time' => $booking->start_time,
-                                'end_time' => $booking->end_time,
-                            ];
-                        });
-
-                        return Excel::download(new BookingsExport($bookingsExport), 'reservas.xlsx');
-                    })
-                    ->icon('heroicon-o-document-arrow-down'),
-                BulkAction::make('exportPdf')
-                    ->label('Exportar para PDF')
-                    ->action(function (Collection $records) {
-                        $selectedIds = $records->pluck('id')->toArray();
-
-                        return response()->redirectToRoute('report.pdf', ['selected' => $selectedIds]);
-                    })
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->color('danger')
-                    ->openUrlInNewTab(),
-                BulkAction::make('sendEmailReport')
-                    ->label('Enviar Relatório por E-mail')
-                    ->action(function (Collection $records, array $data) {
-                        $selectedIds = $records->pluck('id')->toArray();
-                        SendReportEmailJob::dispatch($data['email'], $selectedIds);
-                    })
-                    ->form([
-                        Forms\Components\TextInput::make('email')
-                            ->label('E-mail do Destinatário')
-                            ->email()
-                            ->required(),
-                    ])
-                    ->icon('heroicon-o-envelope')
-                    ->color('success'),
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('client_name'),
+                Tables\Columns\TextColumn::make('client_email'),
+                Tables\Columns\TextColumn::make('service.name'),
+                Tables\Columns\TextColumn::make('start_time'),
+                Tables\Columns\TextColumn::make('end_time'),
             ])
-            ->dropdown(), // Sempre exibido como dropdown
-        ]);
-}
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                // Menu dropdown para todas as telas
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    BulkAction::make('export')
+                        ->label('Exportar para Excel')
+                        ->action(function (Collection $records) {
+                            $bookingsExport = $records->map(function ($booking) {
+                                return [
+                                    'client_name' => $booking->client_name,
+                                    'service' => $booking->service->name,
+                                    'start_time' => $booking->start_time,
+                                    'end_time' => $booking->end_time,
+                                ];
+                            });
 
+                            return Excel::download(new BookingsExport($bookingsExport), 'reservas.xlsx');
+                        })
+                        ->icon('heroicon-o-document-arrow-down'),
+                    BulkAction::make('exportPdf')
+                        ->label('Exportar para PDF')
+                        ->action(function (Collection $records) {
+                            $selectedIds = $records->pluck('id')->toArray();
 
+                            return response()->redirectToRoute('report.pdf', ['selected' => $selectedIds]);
+                        })
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('danger')
+                        ->openUrlInNewTab(),
+                    BulkAction::make('sendEmailReport')
+                        ->label('Enviar Relatório por E-mail')
+                        ->action(function (Collection $records, array $data) {
+                            $selectedIds = $records->pluck('id')->toArray();
+                            SendReportEmailJob::dispatch($data['email'], $selectedIds);
+                        })
+                        ->form([
+                            Forms\Components\TextInput::make('email')
+                                ->label('E-mail do Destinatário')
+                                ->email()
+                                ->required(),
+                        ])
+                        ->icon('heroicon-o-envelope')
+                        ->color('success'),
+                ])
+                    ->label('Ações') // Nome do menu no dropdown
+                    ->dropdown(), // Sempre exibido como dropdown
+            ]);
+    }
 
     public static function getRelations(): array
     {

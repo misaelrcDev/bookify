@@ -2,13 +2,11 @@
 
 namespace App\Filament\Resources\ServiceResource\Pages;
 
-use Filament\Actions;
+use App\Filament\Resources\ServiceResource;
 use App\Models\Service;
-use Illuminate\Support\Facades\Auth;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
-use App\Filament\Resources\ServiceResource;
-
+use Illuminate\Support\Facades\Auth;
 
 class CreateService extends CreateRecord
 {
@@ -35,6 +33,4 @@ class CreateService extends CreateRecord
 
         return $data;
     }
-
-
 }

@@ -2,27 +2,25 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Widgets\ReservationsChart;
+use Filament\Forms\Components\Field;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\AuthenticateSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
-use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Columns\Column;
 use Filament\View\PanelsRenderHook;
+use Filament\Widgets;
 use Illuminate\Contracts\View\View;
-use Filament\Forms\Components\Field;
-use Filament\Http\Middleware\Authenticate;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Filament\Http\Middleware\AuthenticateSession;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,12 +28,12 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
 
-            ->bootUsing(function (){
-                Field::configureUsing(function(Field $field) {
+            ->bootUsing(function () {
+                Field::configureUsing(function (Field $field) {
                     $field->translateLabel();
                 });
 
-                Column::configureUsing(function(Column $column) { 
+                Column::configureUsing(function (Column $column) {
                     $column->translateLabel();
                 });
             })

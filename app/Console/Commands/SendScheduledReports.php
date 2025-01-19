@@ -2,16 +2,17 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 use App\Models\Booking;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\ReportEmail;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class SendScheduledReports extends Command
 {
     protected $signature = 'reports:send';
+
     protected $description = 'Envia relatórios periódicos para os administradores';
 
     public function __construct()
@@ -35,7 +36,7 @@ class SendScheduledReports extends Command
         $bookings = Booking::with('service')
             ->where('user_id', Auth::user()->id)
             ->get()
-            ->map(function($booking) {
+            ->map(function ($booking) {
                 return [
                     'client_name' => $booking->client_name,
                     'service' => $booking->service->name,
@@ -49,4 +50,3 @@ class SendScheduledReports extends Command
         Mail::to($recipient)->send(new ReportEmail($pdf->output()));
     }
 }
-

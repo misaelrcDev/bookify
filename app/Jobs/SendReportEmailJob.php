@@ -2,22 +2,23 @@
 
 namespace App\Jobs;
 
-use App\Models\Booking;
 use App\Mail\ReportEmail;
+use App\Models\Booking;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class SendReportEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $email;
+
     protected $selectedIds;
 
     public function __construct($email, $selectedIds)
@@ -32,7 +33,7 @@ class SendReportEmailJob implements ShouldQueue
             ->where('user_id', Auth::user()->id)
             ->whereIn('id', $this->selectedIds)
             ->get()
-            ->map(function($booking) {
+            ->map(function ($booking) {
                 return [
                     'client_name' => $booking->client_name,
                     'service' => $booking->service->name,
@@ -46,5 +47,3 @@ class SendReportEmailJob implements ShouldQueue
         Mail::to($this->email)->send(new ReportEmail($pdf->output()));
     }
 }
-
-

@@ -2,20 +2,16 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Service;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Actions\CreateAction;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ServiceResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\ServiceResource\RelationManagers;
+use App\Models\Service;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-
+use Illuminate\Support\Facades\Auth;
 
 class ServiceResource extends Resource
 {
@@ -25,7 +21,6 @@ class ServiceResource extends Resource
     {
         return parent::getEloquentQuery()->where('user_id', Auth::id());
     }
-
 
     public static function getModelLabel(): string
     {
@@ -41,8 +36,8 @@ class ServiceResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->label('Nome do Serviço')
                     ->required(),
-                    // ->unique(Service::class, 'name', ignorable: fn ($record) => $record) // Verifica duplicação
-                    // ->rule('unique:services,name,NULL,id,user_id,' . Auth::id()), // Garantir unicidade por usuário
+                // ->unique(Service::class, 'name', ignorable: fn ($record) => $record) // Verifica duplicação
+                // ->rule('unique:services,name,NULL,id,user_id,' . Auth::id()), // Garantir unicidade por usuário
                 Forms\Components\TextInput::make('price')
                     ->label('Preço')
                     ->numeric()
@@ -58,7 +53,7 @@ class ServiceResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Serviço'),
-                Tables\Columns\TextColumn::make('price')->label('Preço')->formatStateUsing(fn ($state) => 'R$ ' . number_format($state, 2, ',', '.')),
+                Tables\Columns\TextColumn::make('price')->label('Preço')->formatStateUsing(fn ($state) => 'R$ '.number_format($state, 2, ',', '.')),
             ])
             ->filters([
                 //
@@ -67,18 +62,18 @@ class ServiceResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->before(function ($record) {
-                    // Remove permanentemente o registro ao deletar
-                    $record->forceDelete();
-                }),
+                        // Remove permanentemente o registro ao deletar
+                        $record->forceDelete();
+                    }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make()
-                    ->action(function (Collection $records) {
-                        // Remove permanentemente os registros selecionados
-                        $records->each->forceDelete();
-                    }),
-                ]),
+                    Tables\Actions\BulkActionGroup::make([
+                        Tables\Actions\DeleteBulkAction::make()
+                            ->action(function (Collection $records) {
+                                // Remove permanentemente os registros selecionados
+                                $records->each->forceDelete();
+                            }),
+                    ]),
             ]);
     }
 
@@ -89,7 +84,6 @@ class ServiceResource extends Resource
         ];
     }
 
-    
     public static function getPages(): array
     {
         return [
@@ -98,5 +92,4 @@ class ServiceResource extends Resource
             'edit' => Pages\EditService::route('/{record}/edit'),
         ];
     }
-
 }

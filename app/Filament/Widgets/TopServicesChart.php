@@ -4,9 +4,9 @@ namespace App\Filament\Widgets;
 
 use App\Models\Booking;
 use App\Models\Service; // Supondo que você tenha um modelo de Service
+use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Auth;
-use Filament\Support\RawJs;
 
 class TopServicesChart extends ChartWidget
 {
@@ -37,7 +37,7 @@ class TopServicesChart extends ChartWidget
 
     protected function getOptions(): RawJs
     {
-        return RawJs::make(<<<JS
+        return RawJs::make(<<<'JS'
             {
                 plugins: {
                     legend: {

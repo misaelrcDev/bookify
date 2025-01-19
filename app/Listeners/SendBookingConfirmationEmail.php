@@ -3,10 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\BookingCreated;
+use App\Mail\BookingConfirmation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\BookingConfirmation;
-use Illuminate\Support\Facades\Log;
 
 class SendBookingConfirmationEmail implements ShouldQueue
 {
@@ -22,5 +21,3 @@ class SendBookingConfirmationEmail implements ShouldQueue
         Mail::to($booking->client_email)->send(new BookingConfirmation($booking));
     }
 }
-
-

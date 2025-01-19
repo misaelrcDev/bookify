@@ -3,12 +3,11 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Booking;
+use Filament\Support\RawJs;
+use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
-use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Filament\Support\RawJs;
 
 class ReservationsChart extends ChartWidget
 {
@@ -21,27 +20,27 @@ class ReservationsChart extends ChartWidget
         $query = Booking::where('user_id', $userId);
 
         $data = Trend::query($query)
-        ->between(
-            start: now()->startOfYear(),
-            end: now()->endOfYear(),
-        )
-        ->perMonth()
-        ->count();
-        
+            ->between(
+                start: now()->startOfYear(),
+                end: now()->endOfYear(),
+            )
+            ->perMonth()
+            ->count();
+
         return [
             'datasets' => [
-                    [
-                        'label' => 'Reservas por mês',
-                        'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
-                    ],
+                [
+                    'label' => 'Reservas por mês',
+                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
                 ],
-                'labels' => $data->map(fn (TrendValue $value) => $value->date),
-            ];
+            ],
+            'labels' => $data->map(fn (TrendValue $value) => $value->date),
+        ];
     }
 
     protected function getOptions(): RawJs
     {
-        return RawJs::make(<<<JS
+        return RawJs::make(<<<'JS'
             {
                 plugins: {
                     legend: {

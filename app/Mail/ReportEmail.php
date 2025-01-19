@@ -20,11 +20,9 @@ class ReportEmail extends Mailable
     public function build()
     {
         return $this->view('emails.report')
-                    ->subject('Relatório de Reservas')
-                    ->attachData($this->pdfContent, 'report.pdf', [
-                        'mime' => 'application/pdf',
-                    ]);
+            ->subject('Relatório de Reservas')
+            ->attachData($this->pdfContent, 'report.pdf', [
+                'mime' => 'application/pdf',
+            ]);
     }
 }
-
-

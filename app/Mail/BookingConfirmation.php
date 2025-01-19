@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Models\Booking;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Booking;
 
 class BookingConfirmation extends Mailable
 {
@@ -21,7 +21,7 @@ class BookingConfirmation extends Mailable
     public function build()
     {
         return $this->view('emails.booking_confirmation')
-                    ->subject('Confirmação de Reserva')
-                    ->with(['booking' => $this->booking]);
+            ->subject('Confirmação de Reserva')
+            ->with(['booking' => $this->booking]);
     }
 }

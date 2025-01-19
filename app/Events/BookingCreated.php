@@ -20,4 +20,3 @@ class BookingCreated
         $this->booking = $booking;
     }
 }
-

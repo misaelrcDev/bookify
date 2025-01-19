@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Filament\Http\Middleware\Authenticate;
 use App\Http\Controllers\ReportController;
+use Filament\Http\Middleware\Authenticate;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('/admin');
