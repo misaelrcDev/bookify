@@ -28,4 +28,3 @@ class Subscription extends Page
         return redirect()->route('filament.pages.subscription');
     }
 }
-

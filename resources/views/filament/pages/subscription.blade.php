@@ -28,47 +28,61 @@
     </div>
 
     <script src="https://js.stripe.com/v3/"></script>
-    <script>
-        const stripe = Stripe('{{ env('STRIPE_KEY') }}');
-        const elements = stripe.elements();
-        const cardElement = elements.create('card', {
-            style: {
-                base: {
-                    color: '#32325d',
-                    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-                    fontSmoothing: 'antialiased',
-                    fontSize: '16px',
-                    '::placeholder': {
-                        color: '#aab7c4'
-                    }
-                },
-                invalid: {
-                    color: '#fa755a',
-                    iconColor: '#fa755a'
+    <script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe('{{ env('STRIPE_KEY') }}');
+    const elements = stripe.elements();
+
+    // Função para obter as cores baseadas no tema
+    function getThemeStyles() {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        return {
+            base: {
+                color: isDarkMode ? '#ffffff' : '#32325d', // Branco no tema escuro, cinza no claro
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: isDarkMode ? '#bbbbbb' : '#aab7c4' // Cinza claro no escuro, mais escuro no claro
                 }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
             }
-        });
+        };
+    }
 
-        cardElement.mount('#card-element');
+    // Inicializa o elemento de cartão com as cores do tema atual
+    let cardElement = elements.create('card', { style: getThemeStyles() });
+    cardElement.mount('#card-element');
 
-        const form = document.getElementById('subscription-form');
+    // Observa mudanças no tema e atualiza as cores
+    const observer = new MutationObserver(() => {
+        cardElement.update({ style: getThemeStyles() });
+    });
 
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-            const {paymentMethod, error} = await stripe.createPaymentMethod('card', cardElement);
+    // Gerenciamento do formulário
+    const form = document.getElementById('subscription-form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-            if (error) {
-                document.getElementById('card-errors').textContent = error.message;
-            } else {
-                const hiddenInput = document.createElement('input');
-                hiddenInput.setAttribute('type', 'hidden');
-                hiddenInput.setAttribute('name', 'paymentMethod');
-                hiddenInput.setAttribute('value', paymentMethod.id);
-                form.appendChild(hiddenInput);
+        const { paymentMethod, error } = await stripe.createPaymentMethod('card', cardElement);
 
-                form.submit();
-            }
-        });
-    </script>
+        if (error) {
+            document.getElementById('card-errors').textContent = error.message;
+        } else {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'paymentMethod');
+            hiddenInput.setAttribute('value', paymentMethod.id);
+            form.appendChild(hiddenInput);
+
+            form.submit();
+        }
+    });
+</script>
+
 </x-filament-panels::page>
