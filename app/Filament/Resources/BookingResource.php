@@ -127,13 +127,13 @@ class BookingResource extends Resource
     {
         $user = Auth::user();
         if (!$user || !$user->company) {
-            return true;
+            return false;
         }
         $company = $user->company;
 
         return $company->subscribed('default') &&
-            ($company->subscription('default')->stripe_price === 'price_id_basic' ||
-                $company->subscription('default')->stripe_price === 'price_id_premium');
+            ($company->subscription('default')->stripe_price === 'price_1QkP5tKNXZPgsmL1KjyNiRLx' ||
+                $company->subscription('default')->stripe_price === 'price_1QkPAtKNXZPgsmL1Uqs0b6Hi');
     }
 
 
