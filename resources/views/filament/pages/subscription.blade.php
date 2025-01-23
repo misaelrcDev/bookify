@@ -1,4 +1,4 @@
-<x-filament::page>
+<x-filament-panels::page>
     <div class="flex flex-col items-center justify-center h-screen p-2 bg-gray-100 rounded-lg dark:bg-gray-800">
         <div class="w-full max-w-lg p-6 mt-2 bg-white rounded-lg shadow-md dark:bg-gray-900">
             <h2 class="mb-4 text-lg font-bold text-gray-900 dark:text-gray-100">Gerenciar Assinatura</h2>
@@ -71,4 +71,4 @@
             }
         });
     </script>
-</x-filament::page>
+</x-filament-panels::page>

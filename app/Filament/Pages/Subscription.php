@@ -11,14 +11,8 @@ class Subscription extends Page
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $navigationLabel = 'Gerenciar Assinatura';
     // protected static bool $shouldRegisterNavigation = false;
-
     protected static string $view = 'filament.pages.subscription';
-    protected static ?string $title = null;
-
-    public static function getModelLabel(): string
-    {
-        return __('Subscription');
-    }
+    protected static ?string $title = '';
 
     public function updateSubscription(Request $request)
     {
