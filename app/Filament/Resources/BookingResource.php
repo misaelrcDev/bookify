@@ -123,6 +123,21 @@ class BookingResource extends Resource
             ]);
     }
 
+    public static function canViewAny(): bool
+    {
+        $user = Auth::user();
+        if (!$user || !$user->company) {
+            return true;
+        }
+        $company = $user->company;
+
+        return $company->subscribed('default') &&
+            ($company->subscription('default')->stripe_price === 'price_id_basic' ||
+                $company->subscription('default')->stripe_price === 'price_id_premium');
+    }
+
+
+
     public static function getRelations(): array
     {
         return [
