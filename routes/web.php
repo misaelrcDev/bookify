@@ -17,10 +17,10 @@ Route::post('/filament/pages/subscription', function (\Illuminate\Http\Request $
         'plan' => 'required|string',
     ]);
 
+
     $company->newSubscription('default', $request->plan)->create($request->paymentMethod);
 
     return redirect()->route('filament.pages.subscription')->with('success', 'Assinatura atualizada com sucesso!');
 })->name('filament.pages.subscription');
-
-
+// routes/web.php
 Route::get('/report/pdf', [ReportController::class, 'exportPdf'])->name('report.pdf');
