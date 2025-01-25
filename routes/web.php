@@ -4,23 +4,21 @@ use App\Http\Controllers\ReportController;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return redirect('/admin');
 })->middleware(Authenticate::class);
 
 
-Route::post('/filament/pages/subscription', function (\Illuminate\Http\Request $request) {
-    $company = Auth::user()->company;
+use App\Filament\Pages\Subscription;
 
-    $request->validate([
-        'plan' => 'required|string',
-    ]);
+// Rota para carregar a página de assinatura
+Route::get('/filament/pages/subscription', Subscription::class)->name('filament.pages.subscription');
+
+// Rota para processar o formulário de assinatura
+Route::post('/filament/pages/subscription', [Subscription::class, 'updateSubscription'])->name('filament.pages.subscription.update');
 
 
-    $company->newSubscription('default', $request->plan)->create($request->paymentMethod);
-
-    return redirect()->route('filament.pages.subscription')->with('success', 'Assinatura atualizada com sucesso!');
-})->name('filament.pages.subscription');
 // routes/web.php
 Route::get('/report/pdf', [ReportController::class, 'exportPdf'])->name('report.pdf');

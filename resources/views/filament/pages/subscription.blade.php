@@ -9,7 +9,7 @@
                 </div>
             @endif
 
-            <form id="subscription-form" action="{{ route('filament.pages.subscription') }}" method="POST">
+            <form id="subscription-form" action="{{ route('filament.pages.subscription.update') }}" method="POST">
                 @csrf
                 <label for="plan" class="block mb-2 text-gray-700 dark:text-gray-300">Selecione o Plano</label>
                 <select name="plan" id="plan" class="w-full p-2 mb-4 bg-white border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
@@ -17,13 +17,12 @@
                     <option value="price_1QkP5tKNXZPgsmL1KjyNiRLx">Básico - R$10/mês</option>
                     <option value="price_1QkPAtKNXZPgsmL1Uqs0b6Hi">Premium - R$30/mês</option>
                 </select>
-
                 <label for="card-element" class="block mb-2 text-gray-700 dark:text-gray-300">Método de Pagamento</label>
                 <div id="card-element" class="w-full p-2 mb-4 bg-white border border-gray-300 rounded dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600"></div>
                 <div id="card-errors" role="alert" class="mb-4 text-red-500"></div>
-
                 <button type="submit" class="w-full p-2 text-white bg-blue-500 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">Atualizar Assinatura</button>
             </form>
+
         </div>
     </div>
 

@@ -126,16 +126,23 @@ class BookingResource extends Resource
     public static function canViewAny(): bool
     {
         $user = Auth::user();
-        if (!$user || !$user->company) {
+        if (!$user) {
             return false;
         }
-        $company = $user->company;
 
-        return $company->subscribed('default') &&
-            ($company->subscription('default')->stripe_price === 'price_1QkP5tKNXZPgsmL1KjyNiRLx' ||
-                $company->subscription('default')->stripe_price === 'price_1QkPAtKNXZPgsmL1Uqs0b6Hi');
+        // Verificar se o usuário está inscrito no plano default
+        if (!$user->subscribed('default')) {
+            return false;
+        }
+
+        // Verificar os preços permitidos para a assinatura
+        $allowedPrices = [
+            'price_1QkP5tKNXZPgsmL1KjyNiRLx',
+            'price_1QkPAtKNXZPgsmL1Uqs0b6Hi',
+        ];
+
+        return in_array($user->subscription('default')->stripe_price, $allowedPrices);
     }
-
 
 
     public static function getRelations(): array
