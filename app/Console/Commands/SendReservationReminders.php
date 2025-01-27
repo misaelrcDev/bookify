@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Booking;
-use App\Jobs\SendReservationReminderEmail;
 use Carbon\Carbon;
+use App\Models\Booking;
+use Illuminate\Console\Command;
+use App\Jobs\SendReservationReminderEmail;
 
 class SendReservationReminders extends Command
 {

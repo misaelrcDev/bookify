@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Booking;
-use App\Models\Service; // Supondo que você tenha um modelo de Service
+use App\Models\Service;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class TopServicesChart extends ChartWidget
     {
         $userId = Auth::id();
 
-        $services = Service::all(); // Supondo que você tenha um modelo de Service
+        $services = Service::all();
         $serviceReservations = [];
         foreach ($services as $service) {
             $serviceReservations[$service->name] = Booking::where('user_id', $userId)

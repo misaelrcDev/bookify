@@ -3,9 +3,9 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Booking;
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
 class ReservationsCount extends BaseWidget
 {

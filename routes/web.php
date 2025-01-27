@@ -1,17 +1,16 @@
 <?php
 
+use App\Filament\Pages\Subscription;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
 use Filament\Http\Middleware\Authenticate;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+
 
 Route::get('/', function () {
     return redirect('/admin');
 })->middleware(Authenticate::class);
 
 
-use App\Filament\Pages\Subscription;
 
 // Rota para carregar a página de assinatura
 Route::get('/filament/pages/subscription', Subscription::class)->name('filament.pages.subscription');

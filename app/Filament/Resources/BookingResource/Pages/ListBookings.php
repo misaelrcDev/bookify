@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\BookingResource\Pages;
 
-use App\Filament\Resources\BookingResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\BookingResource;
 
 class ListBookings extends ListRecords
 {

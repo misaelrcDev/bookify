@@ -3,8 +3,8 @@
 namespace App\Filament\Pages\Auth;
 
 use Filament\Forms\Components\Component;
-use Filament\Pages\Auth\Register as AuthRegister;
 use Filament\Forms\Components\TextInput;
+use Filament\Pages\Auth\Register as AuthRegister;
 
 
 class Register extends AuthRegister

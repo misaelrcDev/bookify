@@ -3,10 +3,10 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Booking;
-use Filament\Support\RawJs;
-use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
+use Filament\Support\RawJs;
 use Flowframe\Trend\TrendValue;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationsChart extends ChartWidget

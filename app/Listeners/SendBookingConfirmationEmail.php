@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\BookingCreated;
 use App\Mail\BookingConfirmation;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendBookingConfirmationEmail implements ShouldQueue
 {

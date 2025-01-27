@@ -2,21 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Exports\BookingsExport;
-use App\Filament\Resources\BookingResource\Pages;
-use App\Jobs\SendReportEmailJob;
+use Filament\Forms;
+use Filament\Tables;
 use App\Models\Booking;
 use App\Models\Service;
-use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use App\Exports\BookingsExport;
+use App\Jobs\SendReportEmailJob;
+use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use App\Filament\Resources\BookingResource\Pages;
 
 class BookingResource extends Resource
 {

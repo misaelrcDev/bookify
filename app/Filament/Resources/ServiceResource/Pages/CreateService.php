@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\ServiceResource\Pages;
 
-use App\Filament\Resources\ServiceResource;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Support\Facades\Auth;
+use App\Filament\Resources\ServiceResource;
 
 class CreateService extends CreateRecord
 {
