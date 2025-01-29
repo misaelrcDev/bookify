@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class Subscription extends Page
 {
@@ -33,10 +34,13 @@ class Subscription extends Page
         }
 
         // Criar ou atualizar a assinatura
-        $user->newSubscription('default', $data['plan'])->create($data['paymentMethod']);
+        $subscription = $user->newSubscription('default', $data['plan'])->create($data['paymentMethod']);
+
+        // Definir a data de término da assinatura
+        $subscription->ends_at = Carbon::parse($subscription->created_at)->addMonth();
+        $subscription->save();
 
         session()->flash('success', 'Assinatura atualizada com sucesso!');
         return redirect()->route('filament.pages.subscription');
     }
 }
-

@@ -4,7 +4,9 @@ use App\Filament\Pages\Subscription;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
 use Filament\Http\Middleware\Authenticate;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionExpiry;
+use App\Models\User;
 
 Route::get('/', function () {
     return redirect('/admin');
@@ -19,5 +21,20 @@ Route::get('/filament/pages/subscription', Subscription::class)->name('filament.
 Route::post('/filament/pages/subscription', [Subscription::class, 'updateSubscription'])->name('filament.pages.subscription.update');
 
 
+
 // routes/web.php
 Route::get('/report/pdf', [ReportController::class, 'exportPdf'])->name('report.pdf');
+
+use App\Http\Controllers\TestEmailController;
+
+Route::get('/send-test-email', [TestEmailController::class, 'sendTestEmail']);
+
+Route::get('/send-test-email', function () {
+    $user = User::first();
+    $subscription = $user->subscription('default');
+
+    Mail::to($user->email)->send(new SubscriptionExpiry($user, $subscription));
+
+    return 'E-mail de teste enviado com sucesso!';
+});
+

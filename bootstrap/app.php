@@ -27,5 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // Agendar o envio diário do relatório às 8h para um e-mail específico
         // $schedule->command('report:send misael.cabral89@gmail.com')->dailyAt('16:13');
         $schedule->command('reservations:send-reminders')->daily();
+        $schedule->job(new \App\Jobs\SendSubscriptionExpiryNotification)->daily();
     })
     ->create();
